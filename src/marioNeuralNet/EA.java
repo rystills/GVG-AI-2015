@@ -1,4 +1,4 @@
-package ch.idsia.evolution;
+package marioNeuralNet;
 
 /**
  * Interface to a Generic Evolutionary Algorithm.<br>

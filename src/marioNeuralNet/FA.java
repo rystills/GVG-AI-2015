@@ -1,4 +1,4 @@
-package ch.idsia.evolution;
+package marioNeuralNet;
 
 /**
  * Minimal interface for a function approximator

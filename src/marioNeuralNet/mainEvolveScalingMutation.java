@@ -1,13 +1,13 @@
-package main;
+package marioNeuralNet;
 
-import ch.idsia.agents.Agent;
-import ch.idsia.agents.learning.SmarterMLPAgent;
-import ch.idsia.benchmark.mario.engine.GlobalOptions;
-import ch.idsia.benchmark.tasks.ProgressTask;
-import ch.idsia.evolution.Evolvable;
-import ch.idsia.evolution.ea.SmarterES;
-import ch.idsia.tools.CmdLineOptions;
-import ch.idsia.utils.wox.serial.Easy;
+import marioNeuralNet.Agent;
+import marioNeuralNet.SmarterMLPAgent;
+import marioNeuralNet.GlobalOptions;
+import marioNeuralNet.ProgressTask;
+import marioNeuralNet.Evolvable;
+import marioNeuralNet.SmarterES;
+import marioNeuralNet.CmdLineOptions;
+import marioNeuralNet.Easy;
 
 public class mainEvolveScalingMutation {
     final static int generations = 30;

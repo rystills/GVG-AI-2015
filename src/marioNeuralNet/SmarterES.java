@@ -1,10 +1,10 @@
-package ch.idsia.evolution.ea;
+package marioNeuralNet;
 
-import ch.idsia.agents.Agent;
-import ch.idsia.agents.learning.SmarterMLPAgent;
-import ch.idsia.benchmark.tasks.Task;
-import ch.idsia.evolution.EA;
-import ch.idsia.evolution.Evolvable;
+import marioNeuralNet.Agent;
+import marioNeuralNet.SmarterMLPAgent;
+import marioNeuralNet.Task;
+import marioNeuralNet.EA;
+import marioNeuralNet.Evolvable;
 
 public class SmarterES implements EA {
 

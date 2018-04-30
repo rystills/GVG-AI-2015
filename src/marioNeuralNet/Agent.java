@@ -1,6 +1,6 @@
-package ch.idsia.agents;
+package marioNeuralNet;
 
-import ch.idsia.benchmark.mario.environments.Environment;
+import marioNeuralNet.Environment;
 
 /**
  * Created by IntelliJ IDEA.

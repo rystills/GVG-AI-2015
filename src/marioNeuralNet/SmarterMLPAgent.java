@@ -1,9 +1,9 @@
-package ch.idsia.agents.learning;
+package marioNeuralNet;
 
-import ch.idsia.agents.Agent;
-import ch.idsia.benchmark.mario.environments.Environment;
-import ch.idsia.evolution.Evolvable;
-import ch.idsia.evolution.SmarterMLP;
+import marioNeuralNet.Agent;
+import marioNeuralNet.Environment;
+import marioNeuralNet.Evolvable;
+import marioNeuralNet.SmarterMLP;
 
 public class SmarterMLPAgent implements Agent, Evolvable {
 
