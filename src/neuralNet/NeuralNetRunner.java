@@ -1,4 +1,4 @@
-package misc.tutorials.tutorial2solution;
+package neuralNet;
 
 import java.util.Random;
 
@@ -12,7 +12,7 @@ import misc.runners.RunConfig;
  * PORTALS, SOKOBAN, SURVIVEZOMBIES, ZELDA
  */
 
-public class Tutorial2Runner {
+public class NeuralNetRunner {
 
 	public static void main(String[] args) throws Exception {
 
@@ -20,7 +20,7 @@ public class Tutorial2Runner {
 		//config.addGameLevel("qlearnMaze", 0);
 		config.addGameLevel(RunConfig.GamesTraining2014.FROGS, 1);
 
-		config.setController(misc.tutorials.tutorial2solution.QLearningAgent.class.getCanonicalName());
+		config.setController(neuralNet.NeuralNetAgent.class.getCanonicalName());
 		config.setSaveActions(true);
 		
 		// train 100 times

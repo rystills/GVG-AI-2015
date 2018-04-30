@@ -35,8 +35,7 @@ public class TutorialAgent extends AbstractPlayer {
 	 */
 	public ACTIONS act(StateObservation gameState, ElapsedCpuTimer elapsedTimer) {
 		ArrayList<ACTIONS> available_actions = gameState.getAvailableActions();
-		ACTIONS action = available_actions.get(randomGenerator
-				.nextInt(available_actions.size()));
+		ACTIONS action = available_actions.get(randomGenerator.nextInt(available_actions.size()));
 		// ### Another solution would be to get the randomGenerator to produce
 		// ### integers in the range of available actions:
 		//

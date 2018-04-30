@@ -45,10 +45,8 @@ public class TutorialAgent extends AbstractPlayer {
 		//     -Choose the action that corresponds to that number
 		// ---------------------------
 		ACTIONS action = ACTIONS.ACTION_RIGHT;
-		int rand_num = randomGenerator.nextInt(2);
-		if (rand_num == 0){
-			action = ACTIONS.ACTION_LEFT;
-		}
+		int rand_num = randomGenerator.nextInt(available_actions.size());
+		action = available_actions.get(rand_num);
 		// ---------------------------
 
 		// Return the action.
