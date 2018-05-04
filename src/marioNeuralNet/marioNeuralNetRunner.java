@@ -16,14 +16,15 @@ public class marioNeuralNetRunner {
 
 	public static void main(String[] args) throws Exception {		
 		// train 10 generations
-		trainGenerations(10);
+		trainGenerations(5);
 		// play game visually once
 //		config.setRepetitions(1);
 //		runGamesVisually(config);
 	}
 	
-    static Evolvable initial = new SmarterMLPAgent();
-    static SmarterES es = new SmarterES(initial, 50, 25); //50 total population, with 25 parents = 25 children (even split)
+	//#outputs for FROGS: 4
+    static Evolvable initial = new SmarterMLPAgent(4);
+    static SmarterES es = new SmarterES(initial, 30, 15); //50 total population, with 25 parents = 25 children (even split)
 	
 	/**
 	 * train the NN for the specified #generations, then do a visual run with the results
@@ -35,7 +36,7 @@ public class marioNeuralNetRunner {
 		//config.addGameLevel("qlearnMaze", 0);
 		config.addGameLevel(RunConfig.GamesTraining2014.FROGS, 1);
 
-		config.setController(SmarterMLPAgent.class.getCanonicalName());
+		config.setController(NNProxyAgent.class.getCanonicalName());
 		config.setSaveActions(true);
 		
 		//~TRAIN~
@@ -44,6 +45,7 @@ public class marioNeuralNetRunner {
 			es.nextGeneration(mutationMagnitude);
 			//evaluate all members of population
 			for (int r = 0; r < es.population.length; ++i) {
+				NNProxyAgent.curAgent = (SmarterMLPAgent)es.population[r];
 				es.population[r].reset();
 				double score = runOneGame(config);
 	            es.fitness[r] = (float)score;
@@ -102,6 +104,7 @@ public class marioNeuralNetRunner {
 				}
 			}
 		} 
+		return 0;
 	}
 
 	/**

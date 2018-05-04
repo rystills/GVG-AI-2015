@@ -37,6 +37,13 @@ public class SmarterMLPAgent extends AbstractPlayer implements Evolvable {
     	}
     }
     
+    public SmarterMLPAgent(int numOut) {
+    	if (numberOfOutputs == 0) {
+    		numberOfOutputs = numOut;
+    		mlp = new SmarterMLP(numberOfInputs, numberOfOutputs, numberOfOutputs);
+    	}
+    }
+    
     //satisfy Agent implementation
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
