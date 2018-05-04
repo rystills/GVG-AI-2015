@@ -44,15 +44,19 @@ public class marioNeuralNetRunner {
 		for (int i = 0; i < genNum; ++i) {
 			es.nextGeneration(mutationMagnitude);
 			//evaluate all members of population
-			for (int r = 0; r < es.population.length; ++i) {
+			for (int r = 0; r < es.population.length; ++r) {
+				System.out.print(String.format("Evaluating generation %d/%d pop member %d/%d",i+1,genNum,r+1,es.population.length));
 				NNProxyAgent.curAgent = (SmarterMLPAgent)es.population[r];
 				es.population[r].reset();
 				double score = runOneGame(config);
 	            es.fitness[r] = (float)score;
 			}
+			es.shuffle();
+			es.sortPopulationByFitness();
 		}
 		
 		//~RESULT~
+		NNProxyAgent.curAgent = (SmarterMLPAgent)es.population[0];
 		runGamesVisually(config);
 	}
 

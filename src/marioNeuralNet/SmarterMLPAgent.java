@@ -79,109 +79,20 @@ public class SmarterMLPAgent extends AbstractPlayer implements Evolvable {
     }
     
     /**
-     * find the distance to the nearest NPC
+     * find the distance to the nearest observation type
      * @param stateObs our state observation
-     * @return the distance to the nearest npc
+     * @return the distance to the nearest observation type
      */
-    public double nearestNPCDistance(StateObservation stateObs) {
-    	double smallestDist = Double.MAX_VALUE;
-    	ArrayList<Observation>[] pos = stateObs.getNPCPositions();
-    	for (int i = 0; i < pos.length; ++i) {
-    		for (int r = 0; r < pos[i].size(); ++r) {
-    			if (pos[i].get(r).sqDist < smallestDist) {
-            		smallestDist = pos[i].get(r).sqDist;
-            	}		
-    		}
-    	}
-    	return smallestDist;
-    }
-    
-    /**
-     * find the distance to the nearest movable
-     * @param stateObs our state observation
-     * @return the distance to the nearest npc
-     */
-    public double nearestMovableDistance(StateObservation stateObs) {
-    	double smallestDist = Double.MAX_VALUE;
-    	ArrayList<Observation>[] pos = stateObs.getMovablePositions();
-    	for (int i = 0; i < pos.length; ++i) {
-    		for (int r = 0; r < pos[i].size(); ++r) {
-    			if (pos[i].get(r).sqDist < smallestDist) {
-            		smallestDist = pos[i].get(r).sqDist;
-            	}		
-    		}
-    	}
-    	return smallestDist;
-    }
-    
-    /**
-     * find the distance to the nearest resource
-     * @param stateObs our state observation
-     * @return the distance to the nearest npc
-     */
-    public double nearestResourceDistance(StateObservation stateObs) {
-    	double smallestDist = Double.MAX_VALUE;
-    	ArrayList<Observation>[] pos = stateObs.getResourcesPositions();
-    	for (int i = 0; i < pos.length; ++i) {
-    		for (int r = 0; r < pos[i].size(); ++r) {
-    			if (pos[i].get(r).sqDist < smallestDist) {
-            		smallestDist = pos[i].get(r).sqDist;
-            	}		
-    		}
-    	}
-    	return smallestDist;
-    }
-    
-    /**
-     * find the distance to the nearest portal
-     * @param stateObs our state observation
-     * @return the distance to the nearest npc
-     */
-    public double nearestPortalDistance(StateObservation stateObs) {
-    	double smallestDist = Double.MAX_VALUE;
-    	ArrayList<Observation>[] pos = stateObs.getPortalsPositions();
-    	for (int i = 0; i < pos.length; ++i) {
-    		for (int r = 0; r < pos[i].size(); ++r) {
-    			if (pos[i].get(r).sqDist < smallestDist) {
-            		smallestDist = pos[i].get(r).sqDist;
-            	}		
-    		}
-    	}
-    	return smallestDist;
-    }
-    
-    /**
-     * find the distance to the nearest immovable
-     * @param stateObs our state observation
-     * @return the distance to the nearest npc
-     */
-    public double nearestImmovableDistance(StateObservation stateObs) {
-    	double smallestDist = Double.MAX_VALUE;
-    	ArrayList<Observation>[] pos = stateObs.getImmovablePositions();
-    	for (int i = 0; i < pos.length; ++i) {
-    		for (int r = 0; r < pos[i].size(); ++r) {
-    			if (pos[i].get(r).sqDist < smallestDist) {
-            		smallestDist = pos[i].get(r).sqDist;
-            	}		
-    		}
-    	}
-    	return smallestDist;
-    }
-    
-    /**
-     * find the distance to the nearest sprite
-     * @param stateObs our state observation
-     * @return the distance to the nearest npc
-     */
-    public double nearestSpriteDistance(StateObservation stateObs) {
-    	double smallestDist = Double.MAX_VALUE;
-    	ArrayList<Observation>[] pos = stateObs.getFromAvatarSpritesPositions();
-    	for (int i = 0; i < pos.length; ++i) {
-    		for (int r = 0; r < pos[i].size(); ++r) {
-    			if (pos[i].get(r).sqDist < smallestDist) {
-            		smallestDist = pos[i].get(r).sqDist;
-            	}		
-    		}
+    public double nearestDistance(ArrayList<Observation>[] pos) {
+       	double smallestDist = Double.MAX_VALUE;
+    	if (pos != null) {
+    		for (int i = 0; i < pos.length; ++i) {
+        		for (int r = 0; r < pos[i].size(); ++r) {
+        			if (pos[i].get(r).sqDist < smallestDist) {
+                		smallestDist = pos[i].get(r).sqDist;
+                	}		
+        		}
+        	}	
     	}
     	return smallestDist;
     }
@@ -209,14 +120,14 @@ public class SmarterMLPAgent extends AbstractPlayer implements Evolvable {
     	double[] inputs = new double[] {
 			stateObs.getAvatarPosition().x,
 			stateObs.getAvatarPosition().y,
+			stateObs.getAvatarSpeed(),
 			getResourceSum(stateObs),
-			nearestNPCDistance(stateObs),
-			nearestMovableDistance(stateObs),
-			nearestResourceDistance(stateObs),
-			nearestPortalDistance(stateObs),
-			nearestImmovableDistance(stateObs),
-			nearestSpriteDistance(stateObs),
-			stateObs.getAvatarSpeed()
+			nearestDistance(stateObs.getNPCPositions()),
+			nearestDistance(stateObs.getMovablePositions()),
+			nearestDistance(stateObs.getResourcesPositions()),
+			nearestDistance(stateObs.getPortalsPositions()),
+			nearestDistance(stateObs.getImmovablePositions()),
+			nearestDistance(stateObs.getFromAvatarSpritesPositions()),
     	};
     	
     	//construct our output layer by propagating our hidden layer from our inputs

@@ -57,8 +57,8 @@ public class SmarterES implements EA {
             sm.mutate(mutationMagnitude);
             //evaluate(i); ~EVALUATE ME FROM GVG RUNNER~
         }
-        shuffle();
-        sortPopulationByFitness();
+        //shuffle(); ~EXECUTE ME FROM GVG RUNNER~
+        //sortPopulationByFitness(); ~EXECUTE ME FROM GVG RUNNER~
     }
     
     /**
@@ -81,7 +81,7 @@ public class SmarterES implements EA {
     /**
      * shuffle the population, swapping each member with another member chosen at random
      */
-    private void shuffle() {
+    public void shuffle() {
         for (int i = 0; i < population.length; i++) {
             swapPopAndFitness(i, (int) (Math.random() * population.length));
         }
@@ -90,7 +90,7 @@ public class SmarterES implements EA {
     /**
      * use a naive sort to sort the population from highest to lowest fitness
      */
-    private void sortPopulationByFitness() {
+    public void sortPopulationByFitness() {
         for (int i = 0; i < population.length; i++) {
             for (int j = i + 1; j < population.length; j++) {
                 if (fitness[i] < fitness[j]) {
