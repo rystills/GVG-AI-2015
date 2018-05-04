@@ -17,34 +17,6 @@ public class SmarterMLPAgent extends AbstractPlayer implements Evolvable {
     //number of input nodes can be toggled; output nodes should remain at 6 (6 potential actions)
     int numberOfOutputs = 0;
     final int numberOfInputs = 10;
-    
-    //standard integrated data
-    //private Environment environment;
-    protected byte[][] levelScene;
-    protected byte[][] enemies;
-    protected byte[][] mergedObservation;
-    protected float[] marioFloatPos = null;
-    protected float[] enemiesFloatPos = null;
-    protected int[] marioState = null;
-    protected int marioStatus;
-    protected int marioMode;
-    protected boolean isMarioOnGround;
-    protected boolean isMarioAbleToJump;
-    protected boolean isMarioAbleToShoot;
-    protected boolean isMarioCarrying;
-    protected int getKillsTotal;
-    protected int getKillsByFire;
-    protected int getKillsByStomp;
-    protected int getKillsByShell;
-
-    //adjust for varying environment information granularity (see: marioai.org/marioaibenchmark/zLevels)
-    int zLevelScene = 1;
-    int zLevelEnemies = 0;
-
-	//non-standard persistent variables for integrated stateful logic
-    float prevX = 0; //x value last frame
-    float prevY = 0; //y value last frame
-    protected int[] marioCenter; //receptive field center
 
     /**
      * construct a new SmarterMLPAgent with the specified underlying MLP
@@ -61,7 +33,7 @@ public class SmarterMLPAgent extends AbstractPlayer implements Evolvable {
     	//check first run
     	if (numberOfOutputs == 0) {
     		numberOfOutputs = gameState.getAvailableActions().size();
-    			mlp = new SmarterMLP(numberOfInputs, numberOfOutputs, numberOfOutputs);
+    		mlp = new SmarterMLP(numberOfInputs, numberOfOutputs, numberOfOutputs);
     	}
     }
     
@@ -79,28 +51,7 @@ public class SmarterMLPAgent extends AbstractPlayer implements Evolvable {
      * integrate basic stateful data from the specified environment instance
      * @param environment: the currently running environment instance from which we wish to integrate state information
      */
-    public void integrateObservation() {
-//        this.environment = environment;
-//        levelScene = environment.getLevelSceneObservationZ(zLevelScene);
-//        enemies = environment.getEnemiesObservationZ(zLevelEnemies);
-//        mergedObservation = environment.getMergedObservationZZ(1, 0);
-//
-//        this.marioFloatPos = environment.getMarioFloatPos();
-//        this.enemiesFloatPos = environment.getEnemiesFloatPos();
-//        this.marioState = environment.getMarioState();
-
-        //many of these go unused, but are left in for convenient potential future use
-        marioStatus = marioState[0];
-        marioMode = marioState[1];
-        isMarioOnGround = marioState[2] == 1;
-        isMarioAbleToJump = marioState[3] == 1;
-        isMarioAbleToShoot = marioState[4] == 1;
-        isMarioCarrying = marioState[5] == 1;
-        getKillsTotal = marioState[6];
-        getKillsByFire = marioState[7];
-        getKillsByStomp = marioState[8];
-        getKillsByShell = marioState[9];
-    }
+    public void integrateObservation() {}
 
     /**
      * mutate the hidden layer of our NN using the last set mutation magnitude
