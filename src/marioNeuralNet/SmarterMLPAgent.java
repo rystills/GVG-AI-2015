@@ -1,15 +1,21 @@
 package marioNeuralNet;
 
+import java.util.ArrayList;
+
+import core.game.StateObservation;
+import core.player.AbstractPlayer;
 import marioNeuralNet.Agent;
 import marioNeuralNet.Evolvable;
 import marioNeuralNet.SmarterMLP;
+import ontology.Types.ACTIONS;
+import tools.ElapsedCpuTimer;
 
-public class SmarterMLPAgent implements Agent, Evolvable {
+public class SmarterMLPAgent extends AbstractPlayer implements Evolvable {
 
     public SmarterMLP mlp;
     private String name = "SmarterMLPAgent";
     //number of input nodes can be toggled; output nodes should remain at 6 (6 potential actions)
-    final int numberOfOutputs = 6;
+    int numberOfOutputs = 0;
     final int numberOfInputs = 10;
     
     //standard integrated data
@@ -51,8 +57,12 @@ public class SmarterMLPAgent implements Agent, Evolvable {
     /**
      * construct a new SmarterMLPAgent with the default mlp configuration (10 inputs, hidden layer nodes, and outputs)
      */
-    public SmarterMLPAgent() {
-        mlp = new SmarterMLP(numberOfInputs, 10, numberOfOutputs);
+    public SmarterMLPAgent(StateObservation gameState, ElapsedCpuTimer elapsedTimer) {
+    	//check first run
+    	if (numberOfOutputs == 0) {
+    		numberOfOutputs = gameState.getAvailableActions().size();
+    			mlp = new SmarterMLP(numberOfInputs, numberOfOutputs, numberOfOutputs);
+    	}
     }
     
     //satisfy Agent implementation
@@ -108,192 +118,40 @@ public class SmarterMLPAgent implements Agent, Evolvable {
     public void recombine(SmarterMLPAgent parent1, SmarterMLPAgent parent2) {
     	this.mlp.psoRecombine(this.mlp, parent1.mlp, parent2.mlp);
     }
-    
-    /**
-	 * check if there is a gap immediately in front of us
-	 * @return: whether there is a gap immediately in front of us (true) or not (false)
-	 */
-    private boolean gapApproaching() {
-	    if (getReceptiveFieldCellValue(marioCenter[0] + 1, marioCenter[1] + 1) == 0) {
-	    	return true;
-	    }
-	    return false;
-	}
 	
-	/**
-	 * check if there is a wall 1 or 2 blocks in front of us
-	 * @return: whether there is a wall in front of us (true) or not (false)
-	 */
-	private boolean wallApproaching() {
-		if (getReceptiveFieldCellValue(marioCenter[0], marioCenter[1] + 1) != 0 || 
-				getReceptiveFieldCellValue(marioCenter[0], marioCenter[1] + 2) != 0) {
-	    	return true;
-	    }
-		return false;
-	}
-    
     /**
-	 * check if there is an enemy 1 or 2 blocks in front of us
-	 * @return: whether there is an enemy in front of us (true) or not (false)
-	 */
-	private boolean enemyApproaching() {
-		for (int i = 0; i < enemiesFloatPos.length; i+=3) {
-			float ex = enemiesFloatPos[i+1];
-			//check if any enemies x vales are within a small area around mario
-			if (ex <= 48 && ex >= -16) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	/**
-     * check if we are approaching a gap that is still far from us
-     * @return whether we are approaching a far gap (true) or not (false)
-     */
-    private boolean gapApproachingFar() {
-    	return getReceptiveFieldCellValue(marioCenter[0] + 1, marioCenter[1] + 2) == 0;
-    }
-    
-    /**
-     * check if we are approaching a gap that is close to us
-     * @return whether we are approaching a close gap (true) or not (false)
-     */
-    private boolean gapApproachingClose() {
-    	return getReceptiveFieldCellValue(marioCenter[0] + 1, marioCenter[1] + 1) == 0;
-    }
-    
-    /**
-     * check if we are approaching a wall that is still far from us
-     * @return whether we are approaching a far wall (true) or not (false)
-     */
-    private boolean wallApproachingFar() {
-    	return getReceptiveFieldCellValue(marioCenter[0], marioCenter[1] + 2) != 0;
-    }
-    
-    /**
-     * check if we are approaching a wall that is close to us
-     * @return whether we are approaching a close wall (true) or not (false)
-     */
-    private boolean wallApproachingClose() {
-    	return getReceptiveFieldCellValue(marioCenter[0], marioCenter[1] + 1) != 0;
-    }
-    
-    /**
-	 * check if there is an enemy far from us
-	 * @return: whether there is an enemy far in front of us (true) or not (false)
-	 */
-    private boolean enemyApproachingFar() {
-    	for (int i = 0; i < enemiesFloatPos.length; i+=3) {
-			float ex = enemiesFloatPos[i+1];
-			//check if any enemies x vales are within a small area around mario
-			if (ex <= 48 && ex >= 25) {
-				return true;
-			}
-		}
-		return false;
-    }
-    
-    /**
-	 * check if there is an enemy close to us
-	 * @return: whether there is an enemy close in front of us (true) or not (false)
-	 */
-    private boolean enemyApproachingClose() {
-    	for (int i = 0; i < enemiesFloatPos.length; i+=3) {
-			float ex = enemiesFloatPos[i+1];
-			//check if any enemies x vales are within a small area around mario
-			if (ex <= 24 && ex >= -16) {
-				return true;
-			}
-		}
-		return false;
-    }
-	
-	/**
-	 * check if we moved down since last frame; if so, force trueJumpCounter to 0 and stop holding jump
-	 * @return: whether or not we moved down since last frame and had trueJumpCounter > 1
-	 */
-	private boolean checkMovedDown() {
-		//ignore trueJumpCounter <=1 so we can still wallkick (as during wallslide we are slowly moving down)
-		if (marioFloatPos[1] > prevY) {
-	    	return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * check if we are about to stomp on an enemy; if so, hold jump
-	 * @return: whether we are about to stomp on an enemy (true) or not (false)
-	 */
-	private boolean checkAboutToStomp() {
-		//can't stomp an enemy while grouhnded
-		if (isMarioOnGround) {
-			return false;
-		}
-		//check if any enemies are within a tight bound of our x position (note that we ignore y position for simplicity)
-		for (int i = 0; i < enemiesFloatPos.length; i+=3) {
-			if (enemiesFloatPos[i+1] <= 16 && enemiesFloatPos[i+1] >= -8) {
-		    	return true;
-			}
-		}
-    	return false;
-	}
-	
-	/**
-	 * check whether or not mario is running
-	 * @return: whether mario is running (true) or not (false)
-	 */
-	public boolean isMarioRunning() {
-		//max speed when running appears to be a little over 10; 8 should be enough to get the NN on the right track
-		return Math.abs(marioFloatPos[0] - prevX) >= 8; 
-	}
-    
-	/**
-	 * get the receptive field value at the specified coordinates
-	 * @param x: the x coordinate in the field
-	 * @param y: the y coordinate in the field
-	 * @return the receptive field value at the specified coordinates
-	 */
-	public int getReceptiveFieldCellValue(int x, int y) {
-	    if (x < 0 || x >= levelScene.length || y < 0 || y >= levelScene[0].length)
-	        return 0;
-
-	    return levelScene[x][y];
-	}
-	
-	/**
 	 * check our inputs, propagate them, and return some output
 	 * @return the array of keypresses comprising the action our agent wishes to perform
 	 */
-    public boolean[] getAction() {
-    	//update immediate non-standard persistent data
-    	//marioCenter = environment.getMarioReceptiveFieldCenter();
-    	
-    	//construct our input layer from each of our input conditions
+	@Override
+	public ACTIONS act(StateObservation stateObs, ElapsedCpuTimer elapsedTimer) {
+		//construct our input layer from each of our input conditions
     	double[] inputs = new double[] {
-			gapApproaching() ? 1 : 0,
-	    	wallApproaching() ? 1 : 0,
-			enemyApproaching() ? 1 : 0,
-			checkAboutToStomp() ? 1 : 0,
-			checkMovedDown() ? 1 : 0,
-			marioMode == 2 ? 1 : 0,
-			marioMode == 0 ? 1 : 0,
-			isMarioOnGround ? 1 : 0,
-			isMarioAbleToJump ? 1 : 0,
-			isMarioRunning() ? 0 : 1
+			1,
+			1,
+			1,
+			1,
+			1,
+			1,
+			1,
+			1,
+			1,
+			1
     	};
     	
     	//construct our output layer by propagating our hidden layer from our inputs
         double[] outputs = mlp.propagate(inputs);
         
-        //map outputs to 0/1 for keypresses
-        boolean[] action = new boolean[numberOfOutputs];
-        for (int i = 0; i < action.length; action[i] = outputs[i] > 0, ++i);
-        
-        //update late non-standard persistent data
-	    prevY = marioFloatPos[1];
-	    prevX = marioFloatPos[0];
-	    
-        return action;
-    }
+        //find largest output and use that as our action
+        double largestVal = 0;
+        int largestOutput = 0;
+        ArrayList<ACTIONS> act = stateObs.getAvailableActions();
+        for (int i = 0; i < outputs.length; ++i) {
+        	if (outputs[i] > largestVal) {
+        		largestVal = outputs[i];
+        		largestOutput = i;
+        	}
+        }
+        return act.get(largestOutput);
+	}
 }
