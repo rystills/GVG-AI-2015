@@ -14,8 +14,23 @@ import misc.runners.RunConfig;
 
 public class marioNeuralNetRunner {
 
-	public static void main(String[] args) throws Exception {
-
+	public static void main(String[] args) throws Exception {		
+		// train 10 generations
+		trainGenerations(10);
+		// play game visually once
+//		config.setRepetitions(1);
+//		runGamesVisually(config);
+	}
+	
+    static Evolvable initial = new SmarterMLPAgent();
+    static SmarterES es = new SmarterES(initial, 50, 25); //50 total population, with 25 parents = 25 children (even split)
+	
+	/**
+	 * train the NN for the specified #generations, then do a visual run with the results
+	 * @param genNum the number of generations to train
+	 */
+	public static void trainGenerations(int genNum) throws Exception {
+		//~CONFIG~
 		RunConfig config = new RunConfig();
 		//config.addGameLevel("qlearnMaze", 0);
 		config.addGameLevel(RunConfig.GamesTraining2014.FROGS, 1);
@@ -23,11 +38,13 @@ public class marioNeuralNetRunner {
 		config.setController(SmarterMLPAgent.class.getCanonicalName());
 		config.setSaveActions(true);
 		
-		// train 100 times
-		config.setRepetitions(100);
-		runGames(config);
-		// play game visually once
-		config.setRepetitions(1);
+		//~TRAIN~
+        float mutationMagnitude = .3f; //starting mutation magnitude, if using scaling mutation
+		for (int i = 0; i < genNum; ++i) {
+			es.nextGeneration(mutationMagnitude);
+		}
+		
+		//~RESULT~
 		runGamesVisually(config);
 	}
 
@@ -66,8 +83,7 @@ public class marioNeuralNetRunner {
 	 *            The run configuration containing the game details.
 	 */
 	public static void runGames(RunConfig config) {
-		for (GameLevelPair<String, String[]> gameLevelPair : config
-				.getGameLevels()) {
+		for (GameLevelPair<String, String[]> gameLevelPair : config.getGameLevels()) {
 			ArcadeMachine.runGames(RunConfig.getGamePath(gameLevelPair.game),
 					RunConfig.getGameLevelPaths(gameLevelPair.game,
 							gameLevelPair.level), config.getRepetitions(),

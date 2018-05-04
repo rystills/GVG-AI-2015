@@ -11,7 +11,7 @@ public class SmarterES implements EA {
     private final Evolvable[] population; //list of all population members
     private final float[] fitness; //list of all members' fitness
     private final int elite; //number of population members which survive between generations (elite = p, population-elite = c)
-    public final Task task; //evaluation task (simulation)
+    public final Task task = null; //evaluation task (simulation)
     private final int evaluationRepetitions = 1; //only need one evaluation to determine member score
 
     /**
@@ -21,7 +21,7 @@ public class SmarterES implements EA {
      * @param populationSize: the total size of the population
      * @param numParents: how many individuals in our population are parents (elites); the remaining slots are used for children
      */
-    public SmarterES(Task task, Evolvable initial, int populationSize, int numParents) {
+    public SmarterES(Evolvable initial, int populationSize, int numParents) {
         //create our starting population, filled with instances of our starting agent
     	this.population = new Evolvable[populationSize];
         for (int i = 0; i < population.length; population[i] = initial.getNewInstance(), ++i);
@@ -30,7 +30,7 @@ public class SmarterES implements EA {
         this.fitness = new float[populationSize];
         
         this.elite = numParents;
-        this.task = task;
+//        this.task = task;
     }
     
     //satisfy EA implementation

@@ -1,7 +1,6 @@
 package marioNeuralNet;
 
 import marioNeuralNet.Agent;
-import marioNeuralNet.Environment;
 import marioNeuralNet.Evolvable;
 import marioNeuralNet.SmarterMLP;
 
@@ -14,7 +13,7 @@ public class SmarterMLPAgent implements Agent, Evolvable {
     final int numberOfInputs = 10;
     
     //standard integrated data
-    private Environment environment;
+    //private Environment environment;
     protected byte[][] levelScene;
     protected byte[][] enemies;
     protected byte[][] mergedObservation;
@@ -70,15 +69,15 @@ public class SmarterMLPAgent implements Agent, Evolvable {
      * integrate basic stateful data from the specified environment instance
      * @param environment: the currently running environment instance from which we wish to integrate state information
      */
-    public void integrateObservation(Environment environment) {
-        this.environment = environment;
-        levelScene = environment.getLevelSceneObservationZ(zLevelScene);
-        enemies = environment.getEnemiesObservationZ(zLevelEnemies);
-        mergedObservation = environment.getMergedObservationZZ(1, 0);
-
-        this.marioFloatPos = environment.getMarioFloatPos();
-        this.enemiesFloatPos = environment.getEnemiesFloatPos();
-        this.marioState = environment.getMarioState();
+    public void integrateObservation() {
+//        this.environment = environment;
+//        levelScene = environment.getLevelSceneObservationZ(zLevelScene);
+//        enemies = environment.getEnemiesObservationZ(zLevelEnemies);
+//        mergedObservation = environment.getMergedObservationZZ(1, 0);
+//
+//        this.marioFloatPos = environment.getMarioFloatPos();
+//        this.enemiesFloatPos = environment.getEnemiesFloatPos();
+//        this.marioState = environment.getMarioState();
 
         //many of these go unused, but are left in for convenient potential future use
         marioStatus = marioState[0];
@@ -268,7 +267,7 @@ public class SmarterMLPAgent implements Agent, Evolvable {
 	 */
     public boolean[] getAction() {
     	//update immediate non-standard persistent data
-    	marioCenter = environment.getMarioReceptiveFieldCenter();
+    	//marioCenter = environment.getMarioReceptiveFieldCenter();
     	
     	//construct our input layer from each of our input conditions
     	double[] inputs = new double[] {

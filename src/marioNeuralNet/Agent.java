@@ -1,7 +1,5 @@
 package marioNeuralNet;
 
-import marioNeuralNet.Environment;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Sergey Karakovskiy
@@ -13,7 +11,7 @@ public interface Agent
 {
     boolean[] getAction();
 
-    void integrateObservation(Environment environment);
+    //void integrateObservation(Environment environment);
 
     void giveIntermediateReward(float intermediateReward);
 
