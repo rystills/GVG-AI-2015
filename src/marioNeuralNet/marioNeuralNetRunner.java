@@ -42,6 +42,12 @@ public class marioNeuralNetRunner {
         float mutationMagnitude = .3f; //starting mutation magnitude, if using scaling mutation
 		for (int i = 0; i < genNum; ++i) {
 			es.nextGeneration(mutationMagnitude);
+			//evaluate all members of population
+			for (int r = 0; r < es.population.length; ++i) {
+				es.population[r].reset();
+				double score = runOneGame(config);
+	            es.fitness[r] = (float)score;
+			}
 		}
 		
 		//~RESULT~
@@ -73,6 +79,29 @@ public class marioNeuralNetRunner {
 			}
 		}
 
+	}
+	
+	/**
+	 * run a single game and get the score
+	 * @param config the game config to use
+	 */
+	public static double runOneGame(RunConfig config) {
+		for (GameLevelPair<String, String[]> gameLevelPair : config
+				.getGameLevels()) {
+			for (String level : gameLevelPair.level) {
+				for (int repetition = 0; repetition < config.getRepetitions(); repetition++) {
+					String actionsFile = "actions_game_" + gameLevelPair.game
+							+ "_lvl_" + level + "_r" + repetition + "_"
+							+ RunConfig.getTimestampNow() + ".txt";
+					return ArcadeMachine.runOneGame(RunConfig
+							.getGamePath(gameLevelPair.game), RunConfig
+							.getGameLevelPath(gameLevelPair.game, level), false,
+							config.getController(),
+							(config.isSaveActions()) ? actionsFile : null,
+							new Random().nextInt());
+				}
+			}
+		} 
 	}
 
 	/**

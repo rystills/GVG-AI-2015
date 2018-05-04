@@ -8,11 +8,11 @@ import marioNeuralNet.Evolvable;
 
 public class SmarterES implements EA {
 
-    private final Evolvable[] population; //list of all population members
-    private final float[] fitness; //list of all members' fitness
+    public final Evolvable[] population; //list of all population members
+    public final float[] fitness; //list of all members' fitness
     private final int elite; //number of population members which survive between generations (elite = p, population-elite = c)
     public final Task task = null; //evaluation task (simulation)
-    private final int evaluationRepetitions = 1; //only need one evaluation to determine member score
+    public final int evaluationRepetitions = 1; //only need one evaluation to determine member score
 
     /**
      * construct a new SmarterES instance to oversee the evaluation and evolution of our population 
@@ -43,7 +43,7 @@ public class SmarterES implements EA {
      */
     public void nextGeneration(float mutationMagnitude) {
     	//evaluate each of the elites (survivors of previous generation) to determine their fitness
-        for (int i = 0; i < elite; evaluate(i), ++i);
+        //for (int i = 0; i < elite; evaluate(i), ++i); ~EVALUATE ME FROM GVG RUNNER~
         
         for (int i = elite; i < population.length; i++) {
         	//note that the worst of the elites will not be copied if elites > population.length/2
@@ -55,7 +55,7 @@ public class SmarterES implements EA {
             int parent2Index = (int) (Math.random() * elite);
             sm.recombine((SmarterMLPAgent)population[parent1Index],(SmarterMLPAgent)population[parent2Index]);
             sm.mutate(mutationMagnitude);
-            evaluate(i);
+            //evaluate(i); ~EVALUATE ME FROM GVG RUNNER~
         }
         shuffle();
         sortPopulationByFitness();
@@ -68,15 +68,15 @@ public class SmarterES implements EA {
     	nextGeneration(-1);
     }
 
-    private void evaluate(int which) {
-        fitness[which] = 0;
-        for (int i = 0; i < evaluationRepetitions; i++)
-        {
-            population[which].reset();
-            fitness[which] += task.evaluate((Agent) population[which])[0];
-        }
-        fitness[which] = fitness[which] / evaluationRepetitions;
-    }
+//    private void evaluate(int which) {
+//        fitness[which] = 0;
+//        for (int i = 0; i < evaluationRepetitions; i++)
+//        {
+//            population[which].reset();
+//            fitness[which] += task.evaluate((Agent) population[which])[0];
+//        }
+//        fitness[which] = fitness[which] / evaluationRepetitions;
+//    }
 
     /**
      * shuffle the population, swapping each member with another member chosen at random
