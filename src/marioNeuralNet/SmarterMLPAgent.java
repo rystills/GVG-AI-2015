@@ -185,6 +185,19 @@ public class SmarterMLPAgent extends AbstractPlayer implements Evolvable {
     	}
     	return smallestDist;
     }
+    
+    /**
+     * sum the available resources
+     * @param stateObs our state observation
+     * @return the sum of our resources
+     */
+    public double getResourceSum(StateObservation stateObs) {
+    	double sum = 0.0f;
+    	for (double d : stateObs.getAvatarResources().values()) {
+    	    sum += d;
+    	}
+    	return sum;
+    }
         	
     /**
 	 * check our inputs, propagate them, and return some output
@@ -196,7 +209,7 @@ public class SmarterMLPAgent extends AbstractPlayer implements Evolvable {
     	double[] inputs = new double[] {
 			stateObs.getAvatarPosition().x,
 			stateObs.getAvatarPosition().y,
-			stateObs.getAvatarResources().values().stream().mapToDouble(u -> u).sum(), //not sure about this calculation
+			getResourceSum(stateObs),
 			nearestNPCDistance(stateObs),
 			nearestMovableDistance(stateObs),
 			nearestResourceDistance(stateObs),
