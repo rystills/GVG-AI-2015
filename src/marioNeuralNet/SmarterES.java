@@ -12,7 +12,6 @@ public class SmarterES implements EA {
     public final float[] fitness; //list of all members' fitness
     private final int elite; //number of population members which survive between generations (elite = p, population-elite = c)
     public final Task task = null; //evaluation task (simulation)
-    public final int evaluationRepetitions = 1; //only need one evaluation to determine member score
 
     /**
      * construct a new SmarterES instance to oversee the evaluation and evolution of our population 
@@ -67,16 +66,6 @@ public class SmarterES implements EA {
     public void nextGeneration() {
     	nextGeneration(-1);
     }
-
-//    private void evaluate(int which) {
-//        fitness[which] = 0;
-//        for (int i = 0; i < evaluationRepetitions; i++)
-//        {
-//            population[which].reset();
-//            fitness[which] += task.evaluate((Agent) population[which])[0];
-//        }
-//        fitness[which] = fitness[which] / evaluationRepetitions;
-//    }
 
     /**
      * shuffle the population, swapping each member with another member chosen at random

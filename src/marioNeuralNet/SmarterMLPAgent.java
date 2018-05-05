@@ -1,6 +1,7 @@
 package marioNeuralNet;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import core.game.Observation;
 import core.game.StateObservation;
@@ -17,7 +18,7 @@ public class SmarterMLPAgent extends AbstractPlayer implements Evolvable {
     private String name = "SmarterMLPAgent";
     //number of input nodes can be toggled; output nodes should remain at 6 (6 potential actions)
     int numberOfOutputs = 0;
-    final int numberOfInputs = 10;
+    final int numberOfInputs = 7;
 
     /**
      * construct a new SmarterMLPAgent with the specified underlying MLP
@@ -97,6 +98,36 @@ public class SmarterMLPAgent extends AbstractPlayer implements Evolvable {
     	return smallestDist;
     }
     
+    public boolean canMove(String dir, StateObservation stateObs) {
+    	int xOff = 0;
+    	int yOff = 0;
+    	switch (dir) {
+	        case "left": xOff = -1; break;
+	        case "right": xOff = 1; break;
+	        case "up": yOff = -1; break;
+	        case "down": yOff = 1; break;
+    	}
+                  
+    	int blockSize = stateObs.getBlockSize();
+    	ArrayList<Observation>[][] grid = stateObs.getObservationGrid();
+    	int curX = (int)(stateObs.getAvatarPosition().x / blockSize);
+    	int curY = (int)(stateObs.getAvatarPosition().y / blockSize);
+    	curX += xOff;
+    	curY += yOff;
+    	//base case: can't move off the grid
+    	if (curX >= grid.length || curY >= grid[curX].length) {
+    		return false;
+    	}
+    	//check for immutable object in observation grid
+    	for (int i = 0; i < grid[curX][curY].size(); ++i) {
+    		//System.out.println(grid[curX][curY].get(i).category);
+    		if (grid[curX][curY].get(i).category == 4) {//I believe 4 = immutable object
+    			return false;
+    		}
+    	}
+    	return true;
+    }
+    
     /**
      * sum the available resources
      * @param stateObs our state observation
@@ -128,6 +159,10 @@ public class SmarterMLPAgent extends AbstractPlayer implements Evolvable {
 			nearestDistance(stateObs.getPortalsPositions()),
 			nearestDistance(stateObs.getImmovablePositions()),
 			nearestDistance(stateObs.getFromAvatarSpritesPositions()),
+			canMove("left",stateObs) ? 1 : 0,
+			canMove("right",stateObs) ? 1 : 0,
+			canMove("up",stateObs) ? 1 : 0,
+			canMove("down",stateObs) ? 1 : 0
     	};
     	
     	//construct our output layer by propagating our hidden layer from our inputs
@@ -143,6 +178,8 @@ public class SmarterMLPAgent extends AbstractPlayer implements Evolvable {
         		largestOutput = i;
         	}
         }
+        //System.out.println(Arrays.toString(inputs));
+        //System.out.println(Arrays.toString(outputs));
         return act.get(largestOutput);
 	}
 }

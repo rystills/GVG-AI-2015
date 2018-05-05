@@ -16,7 +16,7 @@ public class marioNeuralNetRunner {
 
 	public static void main(String[] args) throws Exception {		
 		// train 10 generations
-		trainGenerations(5);
+		trainGenerations(12);
 		// play game visually once
 //		config.setRepetitions(1);
 //		runGamesVisually(config);
@@ -24,7 +24,7 @@ public class marioNeuralNetRunner {
 	
 	//#outputs for FROGS: 4
     static Evolvable initial = new SmarterMLPAgent(4);
-    static SmarterES es = new SmarterES(initial, 30, 15); //50 total population, with 25 parents = 25 children (even split)
+    static SmarterES es = new SmarterES(initial, 50, 25); //50 total population, with 25 parents = 25 children (even split)
 	
 	/**
 	 * train the NN for the specified #generations, then do a visual run with the results
@@ -35,7 +35,8 @@ public class marioNeuralNetRunner {
 		RunConfig config = new RunConfig();
 		//config.addGameLevel("qlearnMaze", 0);
 		config.addGameLevel(RunConfig.GamesTraining2014.FROGS, 1);
-
+		//config.addGameLevel("qlearnMaze",0);//RunConfig.GamesTraining2014.qlearnMaze, 1);
+		
 		config.setController(NNProxyAgent.class.getCanonicalName());
 		config.setSaveActions(true);
 		

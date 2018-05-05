@@ -157,7 +157,7 @@ public class QLearningAgent extends AbstractPlayer {
 
 	public ACTIONS act(StateObservation gameState, ElapsedCpuTimer elapsedTimer) {
 
-		System.out.println(gameState.getAvailableActions().size());
+		//System.out.println(gameState.getAvailableActions().size());
 		int stateX = (int) gameState.getAvatarPosition().x / blockSize;
 		int stateY = (int) gameState.getAvatarPosition().y / blockSize;
 
